@@ -13,7 +13,7 @@ npm i @sky/next-api-router --save
 define single router, for example: `src/routes/images.js`
 
 ```
-import Router from '@sky/next-api-router';
+import Router from '@sky8/next-api-router';
 
 const router = new Router();
 router.prefix('/api/images');
