@@ -79,10 +79,8 @@ export const PUT = route;
 
 * `prefix`: set router prefix
 * `use`: import another router
-
 ```
 router.use(imageRouter);
 ```
-
 * `handler`: function to handle api request
 * http method related functions, such as: get, post, etc...

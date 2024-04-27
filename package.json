@@ -1,6 +1,6 @@
 {
   "name": "@sky8/next-api-router",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Simple and intuitive configuration for nextjs api routing.",
   "main": "index.js",
   "types": "index.d.ts",
@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "deanhan <info@deanhan.cn>",
-  "license": "ISC",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dean8/next-api-router.git"
@@ -20,9 +20,13 @@
   "keywords": [
     "next",
     "nextjs",
+    "next.js",
     "route",
     "router",
-    "next-api-route"
+    "next-api-route",
+    "next-api-router",
+    "nextjs-api-route",
+    "nextjs-api-router"
   ],
   "engines": {
     "node": ">=10.0.0"
