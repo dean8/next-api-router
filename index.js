@@ -1,6 +1,8 @@
+import { NextResponse } from 'next/server';
+
 const REQUEST_METHODS = ['get', 'post', 'put', 'patch', 'delete', 'head', 'all'];
 
-class Router {
+class NextApiRouter {
   constructor() {
     this._routePrefix = '';
     this._routes = {};
@@ -13,6 +15,7 @@ class Router {
           if (REQUEST_METHODS.includes(method)) {
             return (...args) => {
               _this['_addRequestListener'].bind(_this)(method, ...args);
+              return _this;
             }
           }
           if (typeof item === 'function') {
@@ -32,14 +35,16 @@ class Router {
       this._routes[method] = {};
     }
     this._routes[method][finalPath] = callback;
+    return this;
   }
 
   _addRequestListener(method, path, callback) {
     this._addRoute({ method, path, callback });
+    return this;
   }
 
   _error() {
-    return new Response('Page not found!', { status: 404 });
+    return new NextResponse('Page not found!', { status: 404 });
   }
 
   async _route(request) {
@@ -50,32 +55,31 @@ class Router {
       this._routes?.['all']?.[pathname] ||
       this._error;
     request.query = Object.fromEntries([...searchParams]);
-    if (typeof callback === 'function') {
-      return await callback(request, Response);
-    }
+    return await callback(request, NextResponse);
   }
 
-  prefix(routePrefix) {
-    this._routePrefix = routePrefix;
+  prefix(prefix) {
+    this._routePrefix = prefix;
+    return this;
   }
 
   use(router) {
     Object.keys(router._routes).forEach((method) => {
-      if (!this._routes[method]) {
-        this._routes[method] = {};
-      }
-      this._routes[method] = Object.assign(this._routes[method], router._routes[method] || {});
+      Object.keys(router._routes[method]).forEach((path) => {
+        this._addRoute({ method, path, callback: router._routes[method][path] });
+      });
     });
+    return this;
   }
 
-  async handler(request) {
+  async route(request) {
     try {
       const body = await request.json() || {};
       request.data = body;
     } catch (e) { }
     return await this._route(request) ||
-      new Response('');
+      new NextResponse('');
   }
 }
 
-export default Router;
+export default NextApiRouter;

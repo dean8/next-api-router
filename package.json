@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Simple and intuitive configuration for nextjs api routing.",
   "main": "index.js",
+  "typings": "index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,15 +18,16 @@
   "keywords": [
     "next",
     "nextjs",
-    "next.js",
     "route",
     "router",
-    "api-route",
     "next-api-route"
   ],
   "author": "deanhan <info@deanhan.cn>",
   "license": "MIT",
   "engines": {
     "node": ">=10.0.0"
+  },
+  "devDependencies": {
+    "next": "^14.2.3"
   }
 }

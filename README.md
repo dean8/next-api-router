@@ -61,12 +61,12 @@ create `[...slug]/page.js` under `app/api` folder, and paste follow code:
 import router from '@/src/routes';
 
 // NOTICE: very important!!!
-const request = router.handler.bind(router);
+const route = router.route.bind(router);
 
-export const GET = request;
-export const POST = request;
-export const DELETE = request;
-export const PUT = request;
+export const GET = route;
+export const POST = route;
+export const DELETE = route;
+export const PUT = route;
 
 // export other support http method
 ```
