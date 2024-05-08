@@ -66,6 +66,16 @@ export const POST = route;
 export const DELETE = route;
 export const PUT = route;
 
+/**
+  or:
+  export {
+    route as GET,
+    route as POST,
+    route as DELETE,
+    route as PUT,
+  };
+**/
+
 // export other support http method
 ```
 
@@ -80,5 +90,5 @@ export const PUT = route;
 ```
 router.use(imageRouter);
 ```
-* `handler`: function to handle api request
-* http method related functions, such as: get, post, etc...
+* `route`: function to handle api request
+* http method related functions, such as: get, post, put, delete, etc...

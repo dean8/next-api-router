@@ -4,7 +4,7 @@ export type RequestMethod = 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head'
 
 export type RequestCallback = (req: NextRequest, res: NextResponse) => INextApiRouter;
 
-type RouteParams = {
+export type RouteParams = {
     method: RequestMethod;
     path: string;
     callback: RequestCallback;
@@ -24,8 +24,8 @@ interface INextApiRouter {
 }
 
 declare class NextApiRouter implements INextApiRouter {
-    private readonly _routePrefix;
-    private readonly _routes;
+    private readonly _routePrefix: string;
+    private readonly _routes: Object;
     private _addRoute(RouteParams): INextApiRouter;
     private _addRequestListener(method: RequestMethod, path: string, callback: RequestCallback): INextApiRouter;
     private _error(): NextResponse;
