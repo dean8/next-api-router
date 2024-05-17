@@ -1,6 +1,6 @@
 {
   "name": "@sky8/next-api-router",
-  "version": "1.0.6",
+  "version": "1.0.9",
   "description": "Simple and intuitive configuration for nextjs api routing.",
   "main": "index.js",
   "types": "index.d.ts",

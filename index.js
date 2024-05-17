@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 
 const REQUEST_METHODS = ['get', 'post', 'put', 'patch', 'delete', 'head', 'all'];
+const DYNAMIC_TAG = 'dynamic';
 
 class NextApiRouter {
   constructor() {
@@ -28,9 +29,12 @@ class NextApiRouter {
   }
 
   _addRoute({ method, path, callback }) {
-    const finalPath = `${this._routePrefix}${path}`
+    let finalPath = `${this._routePrefix}${path}`
       .replace(/\/{2,}/g, '/')
       .replace(/\/$/, '');
+    if (finalPath.includes(':')) {
+      method = DYNAMIC_TAG;
+    }
     if (!this._routes[method]) {
       this._routes[method] = {};
     }
@@ -50,11 +54,42 @@ class NextApiRouter {
   async _route(request) {
     const { method, nextUrl } = request;
     const { pathname, searchParams } = nextUrl;
-    const callback =
+
+    request.params = {}; // dynamic parameter
+    request.query = {}; // get query parameter
+    request.data = {}; // post parameter
+
+    // 精确匹配路径
+    let callback =
       this._routes?.[method.toLowerCase()]?.[pathname] ||
-      this._routes?.['all']?.[pathname] ||
-      this._error;
-    request.query = Object.fromEntries([...searchParams]);
+      this._routes?.['all']?.[pathname];
+
+    // 通过正则匹配路径
+    if (!callback) {
+      let lastMatchedSize = 0;
+      Object.keys(this._routes[DYNAMIC_TAG]).forEach((path) => {
+        const reg = new RegExp(path.replace(/:([^/$]*)/g, '(?<$1>[^/$]*)'));
+        try {
+          const matched = pathname.match(reg);
+          if (matched && matched.length > lastMatchedSize) {
+            const { groups = {} } = matched;
+            request.params = groups;
+            callback = this._routes[DYNAMIC_TAG][path];
+          }
+        } catch (e) {};
+      });
+    }
+
+    // 错误处理
+    if (!callback) {
+      callback = this._error;
+    }
+
+    try {
+      request.query = Object.fromEntries([...searchParams]);
+      const body = await request.clone(true).json() || {};
+      request.data = body;
+    } catch (e) { }
     return await callback(request, NextResponse);
   }
 
@@ -73,10 +108,6 @@ class NextApiRouter {
   }
 
   async route(request) {
-    try {
-      const body = await request.clone(true).json() || {};
-      request.data = body;
-    } catch (e) { }
     return await this._route(request) ||
       new NextResponse('');
   }

@@ -19,23 +19,19 @@ const router = new Router();
 router.prefix('/images');
 
 router.get('/', async (req, res) => {
-  // 获取图片列表
-  return res.json({ success: true });
+  return res.json({ success: true, ...req.data });
 });
 
 router.put('/', async (req, res) => {
-  // 添加/更新图片
   return res.json({ success: true });
 });
 
 router.delete('/', async (req, res) => {
-  // 删除图片
   return res.json({ success: true });
 });
 
-router.get('/list', async (req, res) => {
-  // 获取图片列表
-  return res.json({ success: true });
+router.post('/list', async (req, res) => {
+  return res.json({ success: true, ...req.data });
 });
 
 export default router;
@@ -50,6 +46,7 @@ import imageRouter from './images';
 
 const router = new Router();
 router.prefix('/api')
+
 router.use(imageRouter);
 
 export default router;
@@ -66,17 +63,30 @@ export const POST = route;
 export const DELETE = route;
 export const PUT = route;
 
-/**
-  or:
-  export {
-    route as GET,
-    route as POST,
-    route as DELETE,
-    route as PUT,
-  };
-**/
-
 // export other support http method
+```
+
+### dynamic parameters
+```
+import Router from '@sky8/next-api-router';
+
+const router = new Router();
+router.prefix('/api')
+
+router.all('/params/:name/:gender', (req, res) => {
+  return res.json(req.params);
+});
+
+export default router;
+```
+
+visit `/api/params/dean/male`, you will get:
+
+```
+{
+  "name": "dean",
+  "gender": "male"
+}
 ```
 
 ### Support Methods
